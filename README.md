@@ -8,9 +8,9 @@
 ## Project layout
 
 mood-of-queue/
-├── .gitignore
-├── README.md
-├── requirements.txt
-├── storage.py # Google Sheets wrapper
-└── app.py # Streamlit app
+    ├── .gitignore
+    ├── README.md
+    ├── requirements.txt
+    ├── storage.py # Google Sheets wrapper
+    └── app.py # Streamlit app
 
