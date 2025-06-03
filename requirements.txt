@@ -3,3 +3,4 @@ gspread==6.2.1
 pandas==2.2.3
 python-dotenv==1.0.0
 matplotlib==3.10.3
+streamlit_autorefresh==1.0.1

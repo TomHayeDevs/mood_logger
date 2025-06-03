@@ -97,3 +97,33 @@ def get_today_counts() -> dict[int, int]:
             counts[mood_val] += 1
 
     return counts
+
+
+def get_counts_between(start_date: str, end_date: str) -> dict[int, int]:
+    """
+    Return a dict of mood-counts between start_date and end_date (inclusive).
+    Dates are strings in "YYYY-MM-DD" format (US/Pacific).
+    """
+    counts = {i: 0 for i in range(1, 6)}
+    try:
+        client = _authorize()
+        sheet = client.open_by_key(SHEET_ID).sheet1
+        all_records = sheet.get_all_records()
+    except Exception:
+        return counts
+
+    # Ensure dates are comparable:
+    for rec in all_records:
+        ts = rec.get("timestamp", "")
+        if not ts:
+            continue
+        date_part = str(ts)[:10]  # "YYYY-MM-DD"
+        if not (start_date <= date_part <= end_date):
+            continue
+        try:
+            mood_val = int(rec.get("mood", 0))
+        except ValueError:
+            continue
+        if 1 <= mood_val <= 5:
+            counts[mood_val] += 1
+    return counts
