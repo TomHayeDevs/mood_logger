@@ -43,7 +43,7 @@ def _authorize():
     except json.JSONDecodeError as e:
         raise RuntimeError("SERVICE_ACCOUNT_JSON is not valid JSON.") from e
 
-    client = gspread.service_account_from_dict(cred_dict, scopes=SCOPE)
+    client = service_account_from_dict(cred_dict, scopes=SCOPE)
     return client
 
 def append_row(mood: int, note: str = "") -> bool:
