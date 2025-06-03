@@ -10,14 +10,14 @@ from storage import append_row, get_counts_between
 
 load_dotenv()
 
-# Force a rerun every 5 seconds:
-st_autorefresh(interval=5000, key="auto_refresh")
-
 st.set_page_config(
     page_title="Mood of the Queue",
     page_icon="😊",
     layout="centered",
 )
+
+# Force a rerun every 5 seconds:
+st_autorefresh(interval=5000, key="auto_refresh")
 
 st.markdown(
     """
