@@ -1,12 +1,13 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 import streamlit as st
 from datetime import datetime
 from dotenv import load_dotenv
 from streamlit_autorefresh import st_autorefresh
 
-from storage import append_row, get_counts_between
+from storage import append_row, get_counts_between, get_latest_notes
 
 load_dotenv()
 
@@ -32,7 +33,13 @@ st.write("---")
 st.subheader("Log Your Mood")
 
 EMOJI_MAP = {"😡": 1, "😠": 2, "🤔": 3, "🙂": 4, "😁": 5}
-emoji = st.selectbox("Select mood", options=list(EMOJI_MAP.keys()), index=2)
+# emoji = st.selectbox("Select mood", options=list(EMOJI_MAP.keys()), index=2)
+emoji = st.select_slider(
+    "Select mood",
+    options=list(EMOJI_MAP.keys()),
+    value="🤔",
+    format_func=lambda x: x,  # the slider was not displaying the emoji correctly, so added this format function (Copilot recommendation)
+)
 mood = EMOJI_MAP[emoji]
 note = st.text_input("Optional note", placeholder="Any extra context?")
 
@@ -67,24 +74,40 @@ if df["Count"].sum() == 0:
 else:
     EMOJI_TICKS = {v: k for k, v in EMOJI_MAP.items()}
 
-    fig, ax = plt.subplots(figsize=(6, 4))
-    bars = ax.bar(df["Mood"], df["Count"], color="#3399ff")
-    ax.set_xlabel("Mood")
-    ax.set_ylabel("Number of entries")
-    ax.set_title(f"Mood Counts: {start.isoformat()} to {end.isoformat()}")
-    ax.set_xticks([1, 2, 3, 4, 5])
-    ax.set_xticklabels([EMOJI_TICKS[i] for i in [1, 2, 3, 4, 5]])
-    ax.set_ylim(0, df["Count"].max() + 1)
-    for bar in bars:
-        h = bar.get_height()
-        if h > 0:
-            ax.annotate(
-                f"{int(h)}",
-                xy=(bar.get_x() + bar.get_width() / 2, h),
-                xytext=(0, 3),
-                textcoords="offset points",
-                ha="center",
-                va="bottom",
-            )
-    plt.tight_layout()
-    st.pyplot(fig)
+    # fig, ax = plt.subplots(figsize=(6, 4))
+    # bars = ax.bar(df["Mood"], df["Count"], color="#33eca5")
+    # ax.set_xlabel("Mood")
+    # ax.set_ylabel("Number of entries")
+    # ax.set_title(f"Mood Counts: {start.isoformat()} to {end.isoformat()}")
+    # ax.set_xticks([1, 2, 3, 4, 5])
+    # ax.set_xticklabels([EMOJI_TICKS[i] for i in [1, 2, 3, 4, 5]])
+    # ax.set_ylim(0, df["Count"].max() + 1)
+    # for bar in bars:
+    #     h = bar.get_height()
+    #     if h > 0:
+    #         ax.annotate(
+    #             f"{int(h)}",
+    #             xy=(bar.get_x() + bar.get_width() / 2, h),
+    #             xytext=(0, 3),
+    #             textcoords="offset points",
+    #             ha="center",
+    #             va="bottom",
+    #         )
+    # plt.tight_layout()
+    # st.pyplot(fig)
+
+    latest_notes = get_latest_notes()
+    hover_texts = [latest_notes.get(i, "(no note)") for i in [1, 2, 3, 4, 5]]
+
+    fig = px.bar(
+        x=[EMOJI_TICKS[i] for i in [1, 2, 3, 4, 5]],
+        y=[counts[i] for i in [1, 2, 3, 4, 5]],
+        labels={"x": "Mood", "y": "Number of entries"},
+        hover_data={"Note": hover_texts},
+    )
+    
+    fig.update_layout(
+        title_text=f"Mood Counts: {start.isoformat()} to {end.isoformat()}",
+        xaxis={'categoryorder':'array','categoryarray':[EMOJI_TICKS[i] for i in [1,2,3,4,5]]}
+    )
+    st.plotly_chart(fig, use_container_width=True)

@@ -127,3 +127,26 @@ def get_counts_between(start_date: str, end_date: str) -> dict[int, int]:
         if 1 <= mood_val <= 5:
             counts[mood_val] += 1
     return counts
+
+
+def get_latest_notes() -> dict[int, str]:
+    """
+    Returns a dict {1: latest_note_for_mood1, 2: …, …, 5: …}.
+    """
+    client = _authorize()
+    sheet = client.open_by_key(SHEET_ID).sheet1
+    records = sheet.get_all_records()  # each record has "timestamp","mood","note"
+    latest = {}
+    for rec in records:
+        mood_val = int(rec.get("mood", 0))
+        note_text = rec.get("note", "") or ""
+        ts = str(rec.get("timestamp", ""))
+        if not note_text or not ts:
+            continue
+        if (
+            mood_val not in latest
+            or ts > latest[mood_val][0]
+        ):
+            latest[mood_val] = (ts, note_text)
+    # Convert to just note‐text, default to empty string if none:
+    return {i: latest.get(i, ("", ""))[1] for i in range(1, 6)}
