@@ -52,18 +52,6 @@ if st.button("Submit"):
 
 st.write("---")
 
-# ─── FILTER SECTION ─────────────────────────────────────────────────────────────
-# st.subheader("Filter by Date")
-# col_start, col_end = st.columns(2)
-# with col_start:
-#     start = st.date_input("Start date", value=datetime.now().date())
-# with col_end:
-#     end = st.date_input("End date", value=datetime.now().date())
-
-# if start > end:
-#     st.error("Start date cannot be after end date.")
-#     st.stop()
-
 # ─── VISUALIZATION SECTION ─────────────────────────────────────────────────────
 st.subheader("Mood Distribution")
 col_start, col_end = st.columns(2)
