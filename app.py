@@ -114,8 +114,8 @@ else:
     fig = px.bar(
         x=[EMOJI_TICKS[i] for i in [1, 2, 3, 4, 5]],
         y=[counts[i] for i in [1, 2, 3, 4, 5]],
-        labels={"x": "Mood", "y": "Number of entries"},
-        hover_data={"Note": hover_texts},
+        labels={"y": "Number of entries"},
+        hover_data={"Last Note": hover_texts},
     )
 
     fig.update_layout(
