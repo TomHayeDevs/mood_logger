@@ -53,7 +53,19 @@ if st.button("Submit"):
 st.write("---")
 
 # ─── FILTER SECTION ─────────────────────────────────────────────────────────────
-st.subheader("Filter by Date")
+# st.subheader("Filter by Date")
+# col_start, col_end = st.columns(2)
+# with col_start:
+#     start = st.date_input("Start date", value=datetime.now().date())
+# with col_end:
+#     end = st.date_input("End date", value=datetime.now().date())
+
+# if start > end:
+#     st.error("Start date cannot be after end date.")
+#     st.stop()
+
+# ─── VISUALIZATION SECTION ─────────────────────────────────────────────────────
+st.subheader("Mood Distribution")
 col_start, col_end = st.columns(2)
 with col_start:
     start = st.date_input("Start date", value=datetime.now().date())
@@ -64,10 +76,10 @@ if start > end:
     st.error("Start date cannot be after end date.")
     st.stop()
 
-# ─── VISUALIZATION SECTION ─────────────────────────────────────────────────────
-st.subheader("Mood Distribution")
+
 counts = get_counts_between(start.isoformat(), end.isoformat())
 df = pd.DataFrame({"Mood": list(counts.keys()), "Count": list(counts.values())})
+
 
 if df["Count"].sum() == 0:
     st.write("No mood logged in this date range.")
@@ -105,7 +117,7 @@ else:
         labels={"x": "Mood", "y": "Number of entries"},
         hover_data={"Note": hover_texts},
     )
-    
+
     fig.update_layout(
         title_text=f"Mood Counts: {start.isoformat()} to {end.isoformat()}",
         xaxis={'categoryorder':'array','categoryarray':[EMOJI_TICKS[i] for i in [1,2,3,4,5]]}
