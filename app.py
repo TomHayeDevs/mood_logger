@@ -33,13 +33,7 @@ st.write("---")
 st.subheader("Log Your Mood")
 
 EMOJI_MAP = {"😡": 1, "😠": 2, "🤔": 3, "🙂": 4, "😁": 5}
-# emoji = st.selectbox("Select mood", options=list(EMOJI_MAP.keys()), index=2)
-emoji = st.select_slider(
-    "Select mood",
-    options=list(EMOJI_MAP.keys()),
-    value="🤔",
-    format_func=lambda x: x,  # the slider was not displaying the emoji correctly, so added this format function (Copilot recommendation)
-)
+emoji = st.selectbox("Select mood", options=list(EMOJI_MAP.keys()), index=2)
 mood = EMOJI_MAP[emoji]
 note = st.text_input("Optional note", placeholder="Any extra context?")
 
