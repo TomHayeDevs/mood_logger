@@ -24,7 +24,7 @@ load_dotenv()
 #       so swapped to using streamlit secrets
 GOOGLE_SECRETS = st.secrets["GOOGLE"]
 SERVICE_ACCOUNT_JSON = GOOGLE_SECRETS["SERVICE_ACCOUNT_JSON"]
-SHEET_ID = GOOGLE_SECRETS["SHEET_ID"].strip()
+SHEET_ID = GOOGLE_SECRETS["SHEET_ID"]
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
